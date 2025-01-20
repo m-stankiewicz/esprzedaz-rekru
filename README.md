@@ -1,66 +1,198 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PetStore Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
+The PetStore Application is a Laravel-based project that interacts with the PetStore API. It provides functionalities for managing pets, including creating, updating, fetching, and deleting pet information. This application uses Laravel services, controllers, enums, and custom exceptions to achieve a clean and modular structure.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Pet Management:** Create, update, view, and delete pets.
+- **Pet Status Filtering:** Filter pets based on their status (Available, Pending, Sold).
+- **Custom Exception Handling:** Provides meaningful error messages using custom exceptions.
+- **API Integration:** Interacts with the [Swagger PetStore API](https://petstore.swagger.io/v2).
+- **Unit and Feature Tests:** Comprehensive testing for services and controllers.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Prerequisites
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- PHP >= 8.0
+- Composer
+- Laravel 10
+- Node.js and npm (for front-end assets)
+- MySQL or another supported database
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Steps
 
-## Laravel Sponsors
+1. Clone the repository:
+    ```bash
+    git clone <repository-url>
+    cd <repository-folder>
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. Install PHP dependencies:
+    ```bash
+    composer install
+    ```
 
-### Premium Partners
+3. Install front-end dependencies:
+    ```bash
+    npm install && npm run dev
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+4. Configure environment variables:
+    ```bash
+    cp .env.example .env
+    ```
+    Update the `.env` file with your database and PetStore API details.
+
+5. Generate the application key:
+    ```bash
+    php artisan key:generate
+    ```
+
+6. Run migrations:
+    ```bash
+    php artisan migrate
+    ```
+
+---
+
+## Configuration
+
+The API base URL is configured in the `config/services.php` file. Ensure the `PETSTORE_API_URL` environment variable is set correctly:
+
+```php
+'petstore' => [
+    'api_url' => env('PETSTORE_API_URL', 'https://petstore.swagger.io/v2'),
+],
+```
+
+---
+
+## Usage
+
+### Routes
+
+- **GET `/pets`** - List pets by status.
+- **POST `/pets`** - Create a new pet.
+- **GET `/pets/{id}`** - View details of a specific pet.
+- **PUT `/pets/{id}`** - Update pet details.
+- **DELETE `/pets/{id}`** - Delete a pet.
+
+### Commands
+
+- **Start the server:**
+    ```bash
+    php artisan serve
+    ```
+
+- **Run tests:**
+    ```bash
+    php artisan test
+    ```
+
+---
+
+## Testing
+
+### Feature Tests
+
+- Verifies controller logic and user interactions.
+- Example: Fetching pets, creating new pets, handling exceptions.
+
+### Unit Tests
+
+- Focuses on service logic and API interactions.
+- Example: Testing `PetService` methods for fetching, creating, updating, and deleting pets.
+
+Run all tests:
+```bash
+php artisan test
+```
+
+---
+
+## Directory Structure
+
+- **`app/Services/PetService.php`** - Handles API interactions for pet operations.
+- **`app/Http/Controllers/PetController.php`** - Manages pet-related HTTP requests.
+- **`app/Http/Requests`** - Contains validation logic for creating and updating pets.
+- **`app/Enums/PetStatus.php`** - Enum class for pet statuses.
+- **`app/Exceptions`** - Custom exception classes for handling errors.
+- **`resources/views`** - Blade templates for rendering the user interface.
+
+---
+
+## Custom Exceptions
+
+- **`InvalidIdException`**: Thrown when an invalid ID is supplied.
+- **`PetNotFoundException`**: Thrown when a pet is not found.
+- **`ValidationException`**: Thrown when a validation error occurs.
+
+---
+
+## Frontend
+
+This application uses Blade templates for rendering the user interface. Key views:
+
+- **`layouts/app.blade.php`** - Main layout template.
+- **`pets/index.blade.php`** - Displays a list of pets.
+- **`pets/form.blade.php`** - Form for creating or editing a pet.
+- **`pets/show.blade.php`** - Displays details of a specific pet.
+
+---
+
+## API Integration
+
+The application interacts with the Swagger PetStore API. Key endpoints:
+
+- **GET `/pet/findByStatus`** - Fetch pets by status.
+- **GET `/pet/{id}`** - Fetch pet by ID.
+- **POST `/pet`** - Create a new pet.
+- **PUT `/pet`** - Update an existing pet.
+- **DELETE `/pet/{id}`** - Delete a pet.
+
+---
+
+## Testing APIs
+
+Use tools like Postman or cURL to test the API endpoints.
+
+Example cURL request to fetch pets by status:
+```bash
+curl -X GET "https://petstore.swagger.io/v2/pet/findByStatus?status=available"
+```
+
+---
+
+## Troubleshooting
+
+- **Invalid ID error:** Ensure the ID is an integer and exists in the PetStore API.
+- **Validation error:** Check that the payload matches the expected format.
+- **Pet not found:** Confirm the pet ID exists in the API.
+
+---
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -m 'Add your feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a pull request.
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License.
+
+---
+
+## Credits
+
+Developed by Marek Stankiewicz
